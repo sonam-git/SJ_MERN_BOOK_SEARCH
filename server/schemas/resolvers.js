@@ -10,14 +10,28 @@ const resolvers = {
       // assuming context object contains information about the authenticated user, such as their ID.
       if (context.user) {
         // if found one then return the user with the matching ID.
-        const test = await User.findeOne({ _id: context.user._id });
-        return test;
+        const userData = await User.findeOne({ _id: context.user._id })
+        .select('-__v -password');
+        return userData;
       }
       // If there is no user in the context, the resolver throws an
       throw new AuthenticationError("You need to be logged in!");
     },
   },
   Mutation: {
+     // defines a resolver for the addUser mutation
+     addUser: async (root, { username, email, password }) => {
+      // create new user in the db
+      const user = await User.create({
+        username,
+        email,
+        password,
+      });
+      // generates a token using the signToken function & assigns it to the token variable.
+      const token = signToken(user);
+      // return an object containing both token and user
+      return { token, user };
+    },
     // defines a resolver for the login mutation
     login: async (root, { email, password }) => {
       // check if there is an user with the given email
@@ -33,19 +47,6 @@ const resolvers = {
         throw new AuthenticationError("Incorrect credentials");
       }
       // generates token using signToken function and assigns it to the token varialbe
-      const token = signToken(user);
-      // return an object containing both token and user
-      return { token, user };
-    },
-    // defines a resolver for the addUser mutation
-    addUser: async (root, { username, email, password }) => {
-      // create new user in the db
-      const user = await User.create({
-        username,
-        email,
-        password,
-      });
-      // generates a token using the signToken function & assigns it to the token variable.
       const token = signToken(user);
       // return an object containing both token and user
       return { token, user };
