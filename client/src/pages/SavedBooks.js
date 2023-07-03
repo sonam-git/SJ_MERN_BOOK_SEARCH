@@ -21,23 +21,48 @@ const SavedBooks = () => {
   }
   // set the query and mutation
   const { loading, data } =  useQuery(GET_ME);
+   // eslint-disable-next-line no-unused-vars
+   const [removeBook] = useMutation(REMOVE_BOOK);
   const userData = data?.me || {};
-  // eslint-disable-next-line no-unused-vars
-  const [removeBook] = useMutation(REMOVE_BOOK);
-
+ 
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
-    // check if user is still logged in; if not redirect
-    if (!Auth.loggedIn()) {
-      window.location.replace('/');
+
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+    if (!token) {
+      return false;
     }
+
     try {
       // uses graphQL to execute a query to remove book from user 
-      const { data } = await removeBook({ 
-        variables: {bookId}
+      await removeBook({ 
+        variables: {bookId: bookId},
+        update: (cache )=> {
+          try {
+           // Read the current data from the cache
+          const data = cache.readQuery({ query: GET_ME });
+          const existingMeData = data.me;
+          // Filter out the deleted book from the saved books cache
+          const updatedBooks = existingMeData.savedBooks.filter((book) => book.bookId !== bookId);
+
+          // data.me.savedBooks = updatedBookCache;
+          // Update the cache with the updated saved books data
+          cache.writeQuery({ 
+            query: GET_ME,
+            data: {
+              me: {
+                ...existingMeData,
+                savedBooks: updatedBooks,
+              },
+            },
       });
-      
+    } catch (err) {
+      console.error(err);
+    }
+  },
+});
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {

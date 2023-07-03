@@ -2,11 +2,13 @@
 // import required packages
 const express = require('express');
 const path = require('path');
-const {ApolloServer} = require('apollo-server-express');
-const {typeDefs, resolvers} = require('./schemas');
 const db = require('./config/connection');
+const { ApolloServer } = require('apollo-server-express');
+const { typeDefs, resolvers } = require('./schemas');
 const { authMiddleware } = require('./utils/auth');
 
+// initialize app
+const app = express();
 const PORT = process.env.PORT || 3001;
 
 // create a new instance of ApolloServer,
@@ -16,8 +18,6 @@ const server = new ApolloServer({
   context: authMiddleware,
 });
 
-// initialize app
-const app = express();
 
 // body parser middlewares (require for Graphql to work)
 app.use(express.urlencoded({ extended: true }));
