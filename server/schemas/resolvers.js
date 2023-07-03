@@ -10,9 +10,9 @@ const resolvers = {
       // assuming context object contains information about the authenticated user, such as their ID.
       if (context.user) {
         // if found one then return the user with the matching ID.
-        const userData = await User.findeOne({ _id: context.user._id })
+        const data = await User.findeOne({ _id: context.user._id })
         .select('-__v -password');
-        return userData;
+        return data;
       }
       // If there is no user in the context, the resolver throws an
       throw new AuthenticationError("You need to be logged in!");
@@ -54,7 +54,7 @@ const resolvers = {
     // defines a resolver for the saveBook mutation
     saveBook: async (
       root,
-      { bookId, authors, description, title, image, link },
+      { newBook },
       context
     ) => {
       // checks if there is a user authenticated in the context
@@ -62,12 +62,12 @@ const resolvers = {
         // assigns an empty string as the default value for the description field if it is not provided.
         description = description || " ";
         //  find the user based on the _id
-        return await User.findOneAndUpdate(
+        return await User.findByIdAndUpdate(
           { _id: context.user._id },
           // update the savedBooks array by adding a new book object to it.
           {
             $addToSet: {
-              savedBooks: { authors, bookId, description, title, image, link },
+              savedBooks: newBook,
             },
           },
           // ensures that the updated user object is returned as the result of the mutation.

@@ -21,7 +21,7 @@ const SavedBooks = () => {
   }
   // set the query and mutation
   const { loading, data } =  useQuery(GET_ME);
-  const userData = data?.me || {}
+  const userData = data?.me || {};
   // eslint-disable-next-line no-unused-vars
   const [removeBook] = useMutation(REMOVE_BOOK);
 
@@ -34,8 +34,10 @@ const SavedBooks = () => {
     }
     try {
       // uses graphQL to execute a query to remove book from user 
-      const { data } = await removeBook({ variables: {bookId}});
-
+      const { data } = await removeBook({ 
+        variables: {bookId}
+      });
+      
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
