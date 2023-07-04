@@ -1,4 +1,3 @@
-/* Note : uncomment the routes variable and comment apolloserver/gql related to start with RESTful API */
 // import required packages
 const express = require('express');
 const path = require('path');
@@ -29,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // initializes the ApolloServer and performs any necessary setup operations.
-const startServer = async (typeDefs, resolvers) => {
+const startServer = async () => {
   await server.start();
   // to forward any GQL request in our express server
   server.applyMiddleware({ app });
@@ -42,5 +41,5 @@ const startServer = async (typeDefs, resolvers) => {
   });
 };
 // start the server and begin listening for incoming requests. 
-startServer(typeDefs, resolvers);
+startServer();
 

@@ -4,7 +4,7 @@ import { Container, Col, Form, Button, Card, Row } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
 import Auth from "../utils/auth";
 import { SAVE_BOOK } from "../utils/mutations";
-
+import { GET_ME } from "../utils/queries";
 // import google API fetch
 import { searchGoogleBooks } from "../utils/API";
 // import localstorage functions
@@ -62,27 +62,39 @@ const SearchBooks = () => {
 
   // create function to handle saving a book to our database
   const handleSaveBook = async (bookId) => {
-    // check if user is still logged in; if not redirect
-    if (!Auth.loggedIn()) {
-      window.location.replace('/');
-    }
-    // find the book in `searchedBooks` state by the matching id
+     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
- // get token
- const token = Auth.loggedIn() ? Auth.getToken() : null;
-
- if (!token) {
-   return false;
- }
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+  
+    if (!token) {
+      return false;
+    }
+  
     try {
-       await saveBook({variables: bookToSave});
-
-      // if book successfully saves to user's account, save book id to state
-      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      await saveBook({
+        variables: { newBook: bookToSave},
+        update: cache => {
+          const { me } = cache.readQuery({ query: GET_ME });
+          cache.writeQuery({
+            query: GET_ME,
+            data: {
+              me: {
+                ...me,
+                savedBooks: [...me.savedBooks, bookToSave]
+              }
+            }
+          });
+        }
+        
+      });
+     
+    // if book successfully saves to user's account, save book id to state
+    setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
       console.error(err);
     }
   };
+  
 
   return (
     <>

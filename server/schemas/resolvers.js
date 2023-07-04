@@ -4,6 +4,7 @@ const { User } = require("../models");
 const { signToken } = require("../utils/auth");
 
 const resolvers = {
+  //############### QUERY ##################//
   Query: {
     me: async (root, args, context) => {
       // resolver function checks if there is a user object in the context
@@ -18,6 +19,7 @@ const resolvers = {
       throw new AuthenticationError("You need to be logged in!");
     },
   },
+//############### MUTATION ##################//
   Mutation: {
     // defines a resolver for the addUser mutation
     addUser: async (root, { username, email, password }) => {
@@ -32,6 +34,7 @@ const resolvers = {
       // return an object containing both token and user
       return { token, user };
     },
+
     // defines a resolver for the login mutation
     login: async (root, { email, password }) => {
       // check if there is an user with the given email
@@ -55,30 +58,19 @@ const resolvers = {
     // defines a resolver for the saveBook mutation
     saveBook: async (
       root,
-      { authors, description, bookId, image, link, title },
+      { newBook },
       context
     ) => {
       // checks if there is a user authenticated in the context
       if (context.user) {
         try {
           // // assigns an empty string as the default value for the description field if it is not provided.
-          description = description || " ";
+          // description = description || " ";
           //  find the user based on the _id
           const updatedUser = await User.findByIdAndUpdate(
             { _id: context.user._id },
             // update the savedBooks array by adding a new book object to it.
-            {
-              $addToSet: {
-                savedBooks: {
-                  authors,
-                  description,
-                  bookId,
-                  image,
-                  link,
-                  title,
-                },
-              },
-            },
+            { $addToSet: {savedBooks: newBook}},
             // ensures that the updated user object is returned as the result of the mutation.
             { new: true }
           );
