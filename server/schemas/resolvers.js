@@ -22,9 +22,9 @@ const resolvers = {
 //############### MUTATION ##################//
   Mutation: {
     // defines a resolver for the addUser mutation
-    addUser: async (root, args) => {
+    addUser: async (root, {username, email, password}) => {
       // create new user in the db
-      const user = await User.create({args});
+      const user = await User.create({username, email, password});
       // generates a token using the signToken function & assigns it to the token variable.
       const token = signToken(user);
       // return an object containing both token and user
