@@ -11,10 +11,7 @@ const SavedBooks = () => {
   // set the query and mutation
   const { loading, data } = useQuery(GET_ME);
   // eslint-disable-next-line no-unused-vars
-  const [removeBook] = useMutation(REMOVE_BOOK,
-    {
-      refetchQueries: [GET_ME],
-    });
+  const [removeBook] = useMutation(REMOVE_BOOK);
   const userData = data?.me || {};
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
@@ -29,6 +26,19 @@ const SavedBooks = () => {
       // uses graphQL to execute a query to remove book from user
       await removeBook({
         variables: { bookId },
+        update: (cache) => {
+          // Read the data from the cache for the GET_ME query
+          const { me } = cache.readQuery({ query: GET_ME });
+          // Filter out the deleted book from the savedBooks array in the cache
+          const updatedSavedBooks = me.savedBooks.filter(
+            (book) => book.bookId !== bookId
+          );
+          // Update the savedBooks array in the cache
+          cache.writeQuery({
+            query: GET_ME,
+            data: { me: { ...me, savedBooks: updatedSavedBooks } },
+          });
+        },
       });
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
