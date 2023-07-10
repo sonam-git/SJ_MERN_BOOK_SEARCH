@@ -22,9 +22,9 @@ const resolvers = {
 //############### MUTATION ##################//
   Mutation: {
     // defines a resolver for the addUser mutation
-    addUser: async (root, {username, email, password}) => {
+    addUser: async (root, args) => {
       // create new user in the db
-      const user = await User.create({username, email, password});
+      const user = await User.create(args);
       // generates a token using the signToken function & assigns it to the token variable.
       const token = signToken(user);
       // return an object containing both token and user
@@ -63,7 +63,7 @@ const resolvers = {
           // // assigns an empty string as the default value for the description field if it is not provided.
           // description = description || " ";
           //  find the user based on the _id
-          const updatedUser = await User.findByIdAndUpdate(
+          const updatedUser = await User.findOneAndUpdate(
             { _id: context.user._id },
             // update the savedBooks array by adding a new book object to it.
             { $addToSet: {savedBooks: newBook}},
