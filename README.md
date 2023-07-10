@@ -71,7 +71,7 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 
 ## SJ MERN Book Search Engine GIF:
 #### The following animation demonstrates the application functionality:
-![Application Gif](./src/images/sjReactPortfolio.gif)
+![Application Gif](./assets/images/mern_book_search_engine.gif)
 
 ## Usage Instructions:
 To access application
@@ -95,7 +95,17 @@ To access application
 
 
 ## Application Screenshot:
-![]()
+* Rendering Searched Books:
+
+![Search Book](./assets/images/searchbooks.png)
+
+* Rendering Saving Books:
+
+![Saving Book](./assets/images/savingBook.png)
+
+* Rendering Saved Books:
+
+![Saved Book](./assets/images/savedBook.png)
 
 ## Installation Process:
 1. Clone the Repository from GitHub (or) Download Zip Folder from Repository from GitHub.
