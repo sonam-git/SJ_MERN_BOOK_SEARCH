@@ -1,10 +1,14 @@
 // import required packages
 const express = require('express');
 const path = require('path');
-const db = require('./config/connection');
+//import apollo server
 const { ApolloServer } = require('apollo-server-express');
+// import typeDefs and resolvers
 const { typeDefs, resolvers } = require('./schemas');
 const { authMiddleware } = require('./utils/auth');
+
+//db connection
+const db = require('./config/connection');
 
 // initialize app
 const app = express();
@@ -15,6 +19,11 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: authMiddleware,
+  persistedQueries: false, // Disable persisted queries
+  cacheControl: {
+    defaultMaxAge: 3600, // Set the default cache expiration time in seconds (e.g., 1 hour)
+    calculateHttpHeaders: false, // Disable automatic HTTP cache headers
+  },
 });
 
 
