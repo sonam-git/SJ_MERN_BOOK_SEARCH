@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Container, Col, Form, Button, Card, Row } from "react-bootstrap";
 // importing graphQL enablers
 import { useMutation } from "@apollo/client";
-import Auth from "../utils/auth";
 import { SAVE_BOOK } from "../utils/mutations";
-
+import { GET_ME } from "../utils/queries";
+import Auth from "../utils/auth";
 // import google API fetch
 import { searchGoogleBooks } from "../utils/API";
 // import localstorage functions
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
-import { GET_ME } from "../utils/queries";
+import { Container, Col, Form, Button, Card, Row } from "react-bootstrap";
+
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -19,10 +19,6 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
-  // define the save book function from the mutation
-  const [saveBook] = useMutation(SAVE_BOOK,{
-    refetchQueries:[GET_ME]
-  })
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -62,7 +58,8 @@ const SearchBooks = () => {
       console.error(err);
     }
   };
-
+ // define the save book function from the mutation
+ const [saveBook] = useMutation(SAVE_BOOK);
   // create function to handle saving a book to our database
   const handleSaveBook = async (bookId) => {
      // find the book in `searchedBooks` state by the matching id
@@ -75,7 +72,19 @@ const SearchBooks = () => {
   
     try {
       await saveBook({
-        variables: { newBook: bookToSave} 
+        variables: { newBook: bookToSave} ,
+        refetchQueries: [{ query: GET_ME }],
+         //  to cache manually add the following code
+        // update: (cache, { data }) => {
+        //   // Read the data from the cache for the GET_ME query
+        //   const { me } = cache.readQuery({ query: GET_ME });
+      
+        //   // Update the savedBooks array in the cache with the newly saved book
+        //   cache.writeQuery({
+        //     query: GET_ME,
+        //     data: { me: { ...me, savedBooks: [...me.savedBooks, data.saveBook] } },
+        //   });
+        // },
       });
      
     // if book successfully saves to user's account, save book id to state

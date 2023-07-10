@@ -6,7 +6,7 @@ const { signToken } = require("../utils/auth");
 const resolvers = {
   //############### QUERY ##################//
   Query: {
-    me: async (root, args, context) => {
+    me: async (parent, args, context) => {
       // resolver function checks if there is a user object in the context
       // assuming context object contains information about the authenticated user, such as their ID.
       if (context.user) {
@@ -22,7 +22,7 @@ const resolvers = {
 //############### MUTATION ##################//
   Mutation: {
     // defines a resolver for the addUser mutation
-    addUser: async (root, args) => {
+    addUser: async (parent, args) => {
       // create new user in the db
       const user = await User.create(args);
       // generates a token using the signToken function & assigns it to the token variable.
@@ -32,7 +32,7 @@ const resolvers = {
     },
 
     // defines a resolver for the login mutation
-    login: async (root, { email, password }) => {
+    login: async (parent, { email, password }) => {
       // check if there is an user with the given email
       const user = await User.findOne({ email });
       // if no user found, throws an error message
@@ -52,11 +52,7 @@ const resolvers = {
     },
 
     // defines a resolver for the saveBook mutation
-    saveBook: async (
-      root,
-      { newBook },
-      context
-    ) => {
+    saveBook: async (parent,{ newBook }, context) => {
       // checks if there is a user authenticated in the context
       if (context.user) {
         try {
@@ -80,7 +76,7 @@ const resolvers = {
       }
     },
     // defines a resolver for the removeBook mutation
-    removeBook: async (root, { bookId }, context) => {
+    removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
         try {
           //  find the user based on the _id

@@ -28,21 +28,23 @@ const SavedBooks = () => {
       // uses graphQL to execute a query to remove book from user
       await removeBook({
         variables: { bookId },
-        update: (cache, { data }) => {
-          // Read the data from the cache for the GET_ME query
-          const { me } = cache.readQuery({ query: GET_ME });
-        
-          // Filter out the deleted book from the savedBooks array in the cache
-          const updatedSavedBooks = me.savedBooks.filter(
-            (book) => book.bookId !== bookId
-          );
-        
-          // Write the updated data back to the cache
-          cache.writeQuery({
-            query: GET_ME,
-            data: { me: { ...me, savedBooks: updatedSavedBooks } },
-          });
-        },
+         refetchQueries: [{ query: GET_ME }],
+        //  to cache manually add the following code
+        // update: (cache) => {
+        //   // Read the data from the cache for the GET_ME query
+        //   const { me } = cache.readQuery({ query: GET_ME });
+      
+        //   // Filter out the deleted book from the savedBooks array in the cache
+        //   const updatedSavedBooks = me.savedBooks.filter(
+        //     (book) => book.bookId !== bookId
+        //   );
+      
+        //   // Write the updated data back to the cache
+        //   cache.writeQuery({
+        //     query: GET_ME,
+        //     data: { me: { ...me, savedBooks: updatedSavedBooks } },
+        //   });
+        // },
       });
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
