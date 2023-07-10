@@ -75,20 +75,20 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 
 ## Usage Instructions:
 To access application
-1. Go to https:// to access the application
+1. Go to [Deployed Application Link:](https://sj-mern-book-search-engine-33f260e10a90.herokuapp.com/) to access the application
 2. Before logging in/setting up an account
-    1. search for books and observe the cards - you will not see any buttons to save the books
-2. Log in or create an account (top right corner menu)
-    1. search for books and observe the cards - you will see "Save this Book!" button at the bottom of each card.
-    2. for books that you like, click on the button
-3. Go to your Saved books (top right corner menu)
-    1. view your existing saved books; notice the red button at the bottom to "delete" book.
-    2. for books that you don't want, click on the "delete" button. Deleting a book will only remove it from your listing; it will not remove it from google.
-4. Allow 2 hours pass by (max life of a token is 2 hours)
-    1. attempt to either: access the ```/saved``` route, click on the "delete" button, or click on the "save book" button - you should be redirected to the main page and the login button will not be visible
+    * search for books and observe the cards - you will not see any buttons to save the books
+3. Log in or create an account (top right corner menu)
+    * search for books and observe the cards - you will see "Save this Book!" button at the bottom of each card.
+    * for books that you like, click on the button
+4. Go to your Saved books (top right corner menu)
+    * view your existing saved books; notice the red button at the bottom to "delete" book.
+    * for books that you don't want, click on the "delete" button. Deleting a book will only remove it from your listing; it will not remove it from google.
+5. Allow 2 hours pass by (max life of a token is 2 hours)
+    *  attempt to either: access the ```/saved``` route, click on the "delete" button, or click on the "save book" button - you should be redirected to the main page and the login button will not be visible
 
 ## Deployed GitHub-Pages Application Link:
-[Deployed GitHub-Pages Application Link:]()
+[Deployed GitHub-Pages Application Link:](https://sj-mern-book-search-engine-33f260e10a90.herokuapp.com/)
 
 ## GitHub Repository:
 [GitHub Repository:](https://github.com/sonam-git/SJ_MERN_BOOK_SEARCH)
@@ -106,6 +106,7 @@ To access application
 * Rendering Saved Books:
 
 ![Saved Book](./assets/images/savedBook.png)
+
 
 ## Installation Process:
 1. Clone the Repository from GitHub (or) Download Zip Folder from Repository from GitHub.
@@ -130,6 +131,7 @@ To access application
 - Visual Studio Code: [Website](https://code.visualstudio.com/)
 
 ## What I Learned:
+
 ### Comparision between RESTful API and GraphQL API
 1. Data Structure:
 
@@ -174,6 +176,7 @@ To access application
 * GraphQL: GraphQL introduces a new query language and requires some additional infrastructure compared to RESTful APIs. This may result in a steeper learning curve and initial setup effort, but it offers more flexibility and efficiency in data retrieval for complex scenarios.
 
 In summary, RESTful APIs are suitable for simple use cases where fixed endpoints and straightforward data retrieval are sufficient. GraphQL, on the other hand, is more suitable for complex scenarios where clients require precise control over data retrieval, real-time updates, and reduced network overhead. The choice between the two depends on the specific needs and complexity of your application.
+
 ### Continued Development:
 1. Rewrite the typeDef for Save book query to use an input Type as opposed to using individual parameters 
 2. Modify the image source to use either http or https depending on the host protocol. The Google API returns the image link as an http links. However, since the App is deployed to Heroku - which by default is https - a lot of warning messages get generated in the Chrome dev tools console about that the fact that a request is made to an http resource.
