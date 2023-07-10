@@ -4,6 +4,7 @@ import { Container, Col, Form, Button, Card, Row } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
 import Auth from "../utils/auth";
 import { SAVE_BOOK } from "../utils/mutations";
+
 // import google API fetch
 import { searchGoogleBooks } from "../utils/API";
 // import localstorage functions
@@ -20,7 +21,7 @@ const SearchBooks = () => {
 
   // define the save book function from the mutation
   const [saveBook] = useMutation(SAVE_BOOK,{
-    refetchQueries: [GET_ME]
+    refetchQueries:[GET_ME]
   })
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
