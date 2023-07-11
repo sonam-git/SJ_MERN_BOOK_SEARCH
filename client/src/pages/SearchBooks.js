@@ -44,6 +44,8 @@ const SearchBooks = () => {
       // gets the API response into an array and selects five fields to store
       const { items } = await response.json();
 
+      // After receiving the response from the Google Books API, the image URLs are checked and updated if they start with http://
+      // ensures that the image URLs are using the secure HTTPS protocol.
       const updatedBookData = items.map((book) => {
         if (book.volumeInfo.imageLinks) {
           const imageLinks = book.volumeInfo.imageLinks;
