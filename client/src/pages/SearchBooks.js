@@ -44,15 +44,26 @@ const SearchBooks = () => {
       // gets the API response into an array and selects five fields to store
       const { items } = await response.json();
 
-      const bookData = items.map((book) => ({
-        bookId: book.id,
-        authors: book.volumeInfo.authors || ["No author to display"],
-        title: book.volumeInfo.title,
-        description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks?.thumbnail || "",
-      }));
+      const updatedBookData = items.map((book) => {
+        if (book.volumeInfo.imageLinks) {
+          const imageLinks = book.volumeInfo.imageLinks;
+          if (imageLinks.smallThumbnail && imageLinks.smallThumbnail.startsWith("http://")) {
+            imageLinks.smallThumbnail = imageLinks.smallThumbnail.replace(/^http:/, "https:");
+          }
+          if (imageLinks.thumbnail && imageLinks.thumbnail.startsWith("http://")) {
+            imageLinks.thumbnail = imageLinks.thumbnail.replace(/^http:/, "https:");
+          }
+        }
+        return {
+          bookId: book.id,
+          authors: book.volumeInfo.authors || ["No author to display"],
+          title: book.volumeInfo.title,
+          description: book.volumeInfo.description,
+          image: book.volumeInfo.imageLinks?.thumbnail || "",
+        };
+      });
       // updating the state
-      setSearchedBooks(bookData);
+      setSearchedBooks(updatedBookData);
       setSearchInput("");
     } catch (err) {
       console.error(err);
